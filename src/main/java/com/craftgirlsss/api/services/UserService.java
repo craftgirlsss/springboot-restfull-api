@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import com.craftgirlsss.api.entity.User;
 import com.craftgirlsss.api.exception.ApiException;
 import com.craftgirlsss.api.models.RegisterUserRequest;
-import com.craftgirlsss.api.repository.UserRepository; 
+import com.craftgirlsss.api.repository.UserRepository;
+import com.craftgirlsss.api.security.BCrypt;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -19,6 +21,7 @@ public class UserService {
     @Autowired
     private Validator validator;
 
+    @Transactional
     public void register(RegisterUserRequest request){
        Set<ConstraintViolation<RegisterUserRequest>> constraintsValidations = validator.validate(request);
        if(constraintsValidations.size() != 0){
@@ -31,6 +34,9 @@ public class UserService {
 
        User user = new User();
        user.setUsername(request.getUsername());
-       user.setPassword(null);
+       user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
+       user.setName(request.getName());
+
+       userRepository.save(user);
     }
 }
