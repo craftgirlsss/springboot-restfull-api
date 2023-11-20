@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerTest {
+class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -84,5 +84,18 @@ public class UserControllerTest {
 
           assertNotNull(response.getError());
         });
+    }
+
+    @Test
+    void getUserUnauthorized()throws Exception{
+      mockMvc.perform(
+        get("/api/users/current")
+        .accept(MediaType.APPLICATION_JSON)
+        .header("X-API-TOKEN", "notfound")
+      ).andExpectAll(status().isUnauthorized()).andDo(result -> {
+        WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(),  new TypeReference<>(){});
+
+        assertNotNull(response.getError());
+      });
     }
 }

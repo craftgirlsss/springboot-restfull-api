@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.craftgirlsss.api.entity.User;
 import com.craftgirlsss.api.models.RegisterUserRequest;
+import com.craftgirlsss.api.models.UserResponse;
 import com.craftgirlsss.api.repository.UserRepository;
 import com.craftgirlsss.api.security.BCrypt;
 import jakarta.transaction.Transactional;
@@ -32,5 +33,12 @@ public class UserService {
        user.setName(request.getName());
 
        userRepository.save(user);
+    }
+
+    public UserResponse get(User user){
+        return  UserResponse.builder()
+        .username(user.getUsername())
+        .name(user.getName())
+        .build();
     }
 }

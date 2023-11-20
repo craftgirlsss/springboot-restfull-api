@@ -11,7 +11,6 @@ import com.craftgirlsss.api.models.TokenResponse;
 import com.craftgirlsss.api.models.WebResponse;
 import com.craftgirlsss.api.services.AuthService;
 
-import ch.qos.logback.core.subst.Token;
 
 @RestController
 public class AuthController {
